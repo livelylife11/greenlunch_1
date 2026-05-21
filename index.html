@@ -1,0 +1,889 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>1차시 — 나의 식습관을 파악하라!</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Black+Han+Sans&display=swap');
+
+*{margin:0;padding:0;box-sizing:border-box;}
+
+:root{
+  --bg:#fdfaf3;
+  --bg2:#f5f0e8;
+  --border:#ddd4c0;
+  --main:#1a1a1a;
+  --gold:#b86e1e;
+  --yellow:#f9c74f;
+  --green:#4a7a3a;
+  --blue:#2e5f80;
+  --purple:#6a3a7a;
+  --red:#c0392b;
+}
+
+body{
+  font-family:'Noto Sans KR',sans-serif;
+  background:var(--bg2);
+  min-height:100vh;
+  padding:16px;
+  color:var(--main);
+}
+
+.container{
+  max-width:780px;
+  margin:0 auto;
+  display:flex;
+  flex-direction:column;
+  gap:14px;
+}
+
+/* ── 헤더 ── */
+.header{
+  background:var(--bg);
+  border-radius:14px;
+  padding:16px 20px;
+  border:1.5px solid var(--border);
+  display:flex;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.h-badge{
+  background:var(--main);
+  color:var(--bg);
+  font-size:9px;
+  padding:3px 10px;
+  border-radius:20px;
+  font-weight:700;
+  white-space:nowrap;
+}
+.h-title{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:18px;
+  line-height:1.1;
+}
+.h-title em{color:var(--gold);font-style:normal;}
+.h-tq{
+  margin-left:auto;
+  font-size:11px;
+  color:#777;
+  line-height:1.6;
+  text-align:right;
+}
+.name-row{
+  width:100%;
+  display:flex;
+  gap:10px;
+  margin-top:6px;
+  border-top:1px solid var(--border);
+  padding-top:10px;
+}
+.name-row label{font-size:11px;font-weight:600;color:#555;display:flex;align-items:center;gap:6px;}
+.name-row input{
+  border:none;
+  border-bottom:2px solid var(--gold);
+  background:transparent;
+  font-size:13px;
+  font-family:inherit;
+  outline:none;
+  width:140px;
+  padding:2px 4px;
+}
+
+/* ── 스토리 배너 ── */
+.story{
+  background:var(--main);
+  color:#fdfaf3;
+  border-radius:12px;
+  padding:14px 18px;
+  font-size:12px;
+  line-height:1.8;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+.story-icon{font-size:28px;flex-shrink:0;}
+.story em{color:var(--yellow);font-style:normal;font-weight:700;}
+
+/* ── 퀘스트 카드 ── */
+.quest-card{
+  background:var(--bg);
+  border-radius:14px;
+  border:1.5px solid var(--border);
+  overflow:hidden;
+  transition:border-color 0.3s;
+}
+.quest-card.done{border-color:#4a7a3a;box-shadow:0 0 0 2px rgba(74,122,58,0.15);}
+
+.quest-header{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px 18px;
+  border-bottom:1.5px solid var(--border);
+  background:var(--bg2);
+}
+.qbadge{
+  font-size:9px;font-weight:700;
+  padding:3px 10px;border-radius:12px;
+  color:#fff;white-space:nowrap;
+}
+.q1{background:var(--green);}
+.q2{background:var(--gold);}
+.q3{background:var(--blue);}
+.q4{background:var(--purple);}
+
+.quest-title{font-size:12px;font-weight:700;}
+.quest-check{
+  margin-left:auto;
+  font-size:11px;
+  color:#bbb;
+  display:flex;
+  align-items:center;
+  gap:5px;
+  transition:color 0.3s;
+}
+.quest-check.done{color:var(--green);font-weight:700;}
+.quest-body{padding:16px 18px;}
+
+/* ── 공통 입력 ── */
+.field-group{display:flex;flex-direction:column;gap:10px;}
+.field-label{font-size:11px;font-weight:700;color:#555;margin-bottom:4px;}
+.field-input{
+  width:100%;
+  border:none;
+  border-bottom:1.5px solid var(--border);
+  background:transparent;
+  font-family:inherit;
+  font-size:13px;
+  padding:6px 4px;
+  outline:none;
+  transition:border-color 0.2s;
+  resize:none;
+}
+.field-input:focus{border-bottom-color:var(--gold);}
+textarea.field-input{
+  border:1.5px solid var(--border);
+  border-radius:8px;
+  padding:8px 10px;
+  min-height:56px;
+  line-height:1.6;
+}
+textarea.field-input:focus{border-color:var(--gold);}
+
+/* ── Q1 퀴즈 ── */
+.quiz-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(130px,1fr));
+  gap:10px;
+  margin-bottom:8px;
+}
+.quiz-item{
+  border:1.5px solid var(--border);
+  border-radius:10px;
+  background:#fff;
+  padding:10px 10px 8px;
+}
+.q-num{font-size:9px;font-weight:700;color:#999;margin-bottom:4px;}
+.q-question{font-size:11px;font-weight:600;color:var(--main);margin-bottom:6px;line-height:1.4;}
+.q-choice{font-size:10px;color:#aaa;line-height:1.7;margin-bottom:4px;}
+.q-answer{
+  border:none;border-bottom:1.5px solid var(--green);
+  background:transparent;font-family:inherit;
+  font-size:12px;outline:none;width:100%;padding:3px 2px;
+}
+.hint{font-size:9px;color:#bbb;margin-top:3px;}
+.score-row{
+  display:flex;justify-content:flex-end;
+  align-items:center;gap:8px;
+  font-size:11px;color:#888;
+  margin-top:4px;
+}
+.score-row input{
+  width:28px;text-align:center;
+  border:none;border-bottom:1.5px solid #ccc;
+  font-size:13px;font-weight:700;font-family:inherit;outline:none;
+  background:transparent;
+}
+
+/* ── Q2 식습관 테스트 ── */
+.type-row{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-bottom:12px;
+}
+.type-box{
+  border:1.5px solid var(--border);
+  border-radius:10px;background:#fff;padding:10px 12px;
+}
+.type-box .tlabel{font-size:10px;color:#aaa;margin-bottom:5px;}
+.type-tag{
+  display:inline-block;
+  background:var(--yellow);color:var(--main);
+  font-size:10px;font-weight:700;
+  padding:2px 8px;border-radius:4px;margin-right:6px;
+}
+
+.habit-table{width:100%;border-collapse:collapse;font-size:11px;}
+.habit-table th{
+  background:var(--main);color:#fdfaf3;
+  padding:7px 6px;text-align:center;font-size:10px;
+}
+.habit-table td{
+  border:1px solid var(--border);
+  padding:6px 5px;text-align:center;background:#fff;
+}
+.habit-table td.rl{
+  background:var(--bg2);font-weight:700;
+  color:#555;font-size:10px;
+}
+.eval-select{
+  width:100%;border:none;background:transparent;
+  font-family:inherit;font-size:11px;
+  text-align:center;outline:none;cursor:pointer;
+  color:var(--gold);font-weight:700;
+}
+.eval-select option{font-weight:400;color:var(--main);}
+
+/* ── Q3 식사 기록 ── */
+.meal-table{width:100%;border-collapse:collapse;font-size:11px;}
+.meal-table th{
+  background:var(--blue);color:#fff;
+  padding:7px 6px;text-align:center;font-size:11px;font-weight:700;
+}
+.meal-table td{
+  border:1px solid var(--border);
+  background:#fff;padding:6px 5px;
+}
+.meal-table td.rl2{
+  background:var(--bg2);font-weight:700;
+  color:var(--blue);text-align:center;font-size:11px;width:48px;
+}
+.meal-table input{
+  width:100%;border:none;background:transparent;
+  font-family:inherit;font-size:11px;outline:none;
+}
+.emoji-group{
+  display:flex;justify-content:center;gap:4px;
+}
+.emoji-btn{
+  background:none;border:1.5px solid transparent;
+  border-radius:6px;font-size:14px;cursor:pointer;
+  padding:2px 4px;transition:all 0.15s;
+  line-height:1;
+}
+.emoji-btn.selected{border-color:var(--gold);background:#fff9ec;}
+
+.reflect-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:10px;margin-top:12px;
+}
+.rbox{
+  border:1.5px solid var(--border);border-radius:10px;
+  background:#fff;padding:10px 12px;
+}
+.rlabel{
+  font-size:11px;font-weight:700;color:var(--blue);
+  margin-bottom:6px;display:flex;align-items:center;gap:4px;
+}
+.rlabel.orange{color:var(--gold);}
+.rbar{display:inline-block;width:3px;height:12px;border-radius:2px;background:var(--blue);flex-shrink:0;}
+.rbar.orange{background:var(--gold);}
+
+/* ── Q4 Exit Ticket ── */
+.exit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.exit-item{
+  background:#fff;border:1.5px solid var(--border);
+  border-radius:10px;padding:12px;
+}
+.e-num{font-size:10px;font-weight:900;color:var(--purple);margin-bottom:3px;}
+.e-q{font-size:11px;font-weight:700;margin-bottom:8px;line-height:1.4;}
+
+/* ── 잠금해제 버튼 ── */
+.unlock-section{
+  background:var(--main);
+  border-radius:14px;
+  padding:20px 22px;
+  text-align:center;
+}
+.unlock-title{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:14px;color:var(--yellow);
+  margin-bottom:6px;letter-spacing:0.5px;
+}
+.unlock-desc{font-size:11px;color:#888;margin-bottom:16px;line-height:1.6;}
+.unlock-btn{
+  background:#3a3a3a;
+  color:#666;
+  border:2px solid #444;
+  border-radius:30px;
+  font-family:'Black Han Sans',sans-serif;
+  font-size:15px;
+  padding:12px 36px;
+  cursor:not-allowed;
+  transition:all 0.4s;
+  letter-spacing:0.5px;
+}
+.unlock-btn.ready{
+  background:linear-gradient(135deg,var(--yellow),var(--gold));
+  color:var(--main);
+  border-color:var(--gold);
+  cursor:pointer;
+  box-shadow:0 4px 20px rgba(185,110,30,0.4);
+  animation:pulse 1.5s ease-in-out infinite;
+}
+@keyframes pulse{
+  0%,100%{box-shadow:0 4px 20px rgba(185,110,30,0.4);}
+  50%{box-shadow:0 4px 32px rgba(249,199,79,0.7);}
+}
+.unlock-hint{font-size:10px;color:#666;margin-top:10px;}
+.unlock-hint.ready{color:var(--yellow);}
+
+/* ── 능력치 바 ── */
+.stat-grid{
+  display:grid;grid-template-columns:1fr 1fr;
+  gap:6px 20px;margin-top:14px;
+}
+.stat-row{display:flex;align-items:center;gap:8px;}
+.stat-name{font-size:10px;font-weight:600;color:#ddd;width:70px;flex-shrink:0;}
+.bar-bg{
+  flex:1;height:9px;background:#3a3a3a;
+  border-radius:5px;overflow:hidden;position:relative;
+}
+.bar-fill{height:100%;border-radius:5px;transition:width 0.8s cubic-bezier(.25,.8,.25,1);}
+.bar-fill.on{background:linear-gradient(90deg,var(--yellow),var(--gold));width:20%;}
+.bar-fill.off{width:0;}
+.bar-fill.unlocking{width:20%;background:linear-gradient(90deg,var(--yellow),var(--gold));}
+.lock-stripe{
+  position:absolute;top:0;left:0;width:100%;height:100%;
+  background-image:repeating-linear-gradient(90deg,transparent,transparent 4px,#4a4a4a 4px,#4a4a4a 6px);
+}
+.stat-val{font-size:9px;color:var(--yellow);font-weight:700;width:30px;text-align:right;flex-shrink:0;}
+.stat-lock{font-size:9px;color:#666;width:46px;text-align:right;flex-shrink:0;}
+
+/* 레이더 */
+.radar-row{
+  display:flex;align-items:center;gap:14px;
+  border-top:1px solid #3a3a3a;padding-top:12px;margin-top:12px;
+}
+.radar-legend{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:4px 10px;}
+.leg-item{display:flex;align-items:center;gap:5px;font-size:10px;color:#aaa;}
+.leg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.leg-dot.on{background:var(--yellow);}
+.leg-dot.off{background:#444;border:1px solid #666;}
+.max-msg{grid-column:1/-1;margin-top:5px;font-size:10px;color:var(--yellow);font-weight:700;}
+
+/* ── 진행 표시 ── */
+.progress-bar-wrap{
+  background:var(--bg);border-radius:10px;
+  border:1.5px solid var(--border);
+  padding:10px 16px;
+  display:flex;align-items:center;gap:10px;
+}
+.prog-label{font-size:11px;font-weight:700;color:#555;white-space:nowrap;}
+.prog-track{
+  flex:1;height:10px;background:#e0d8cc;
+  border-radius:5px;overflow:hidden;
+}
+.prog-fill{
+  height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--green),#7ab856);
+  transition:width 0.5s ease;
+  width:0%;
+}
+.prog-pct{font-size:11px;font-weight:700;color:var(--green);width:32px;text-align:right;}
+
+/* ── 완료 오버레이 ── */
+.unlock-overlay{
+  display:none;
+  position:fixed;inset:0;
+  background:rgba(0,0,0,0.7);
+  z-index:999;
+  align-items:center;justify-content:center;
+}
+.unlock-overlay.show{display:flex;}
+.unlock-modal{
+  background:var(--main);
+  border:2px solid var(--yellow);
+  border-radius:20px;
+  padding:36px 40px;
+  text-align:center;
+  max-width:340px;
+  animation:popIn 0.4s cubic-bezier(.34,1.56,.64,1);
+}
+@keyframes popIn{
+  from{transform:scale(0.7);opacity:0;}
+  to{transform:scale(1);opacity:1;}
+}
+.modal-icon{font-size:52px;margin-bottom:12px;}
+.modal-title{
+  font-family:'Black Han Sans',sans-serif;
+  font-size:20px;color:var(--yellow);
+  margin-bottom:8px;
+}
+.modal-desc{font-size:12px;color:#aaa;line-height:1.7;margin-bottom:20px;}
+.modal-stat{
+  background:#2a2a2a;border-radius:10px;
+  padding:10px 14px;margin-bottom:20px;
+}
+.modal-stat-row{
+  display:flex;align-items:center;gap:8px;margin-bottom:6px;
+}
+.modal-stat-row:last-child{margin-bottom:0;}
+.modal-stat-name{font-size:10px;color:#ddd;width:70px;flex-shrink:0;font-weight:600;}
+.modal-bar-bg{flex:1;height:9px;background:#3a3a3a;border-radius:5px;overflow:hidden;}
+.modal-bar-fill{
+  height:100%;border-radius:5px;
+  background:linear-gradient(90deg,var(--yellow),var(--gold));
+  width:0%;transition:width 1.2s cubic-bezier(.25,.8,.25,1);
+}
+.modal-close{
+  background:linear-gradient(135deg,var(--yellow),var(--gold));
+  color:var(--main);border:none;border-radius:30px;
+  font-family:'Black Han Sans',sans-serif;font-size:14px;
+  padding:10px 30px;cursor:pointer;
+}
+
+@media(max-width:600px){
+  .quiz-grid{grid-template-columns:1fr 1fr;}
+  .type-row{grid-template-columns:1fr;}
+  .reflect-grid,.exit-grid{grid-template-columns:1fr;}
+  .stat-grid{grid-template-columns:1fr;}
+  .radar-row{flex-direction:column;}
+  .h-tq{display:none;}
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- 헤더 -->
+  <div class="header">
+    <span class="h-badge">영양사 되어보기 프로젝트</span>
+    <div class="h-title">1차시 &nbsp;<em>나의 식습관을 파악하라!</em></div>
+    <div class="h-tq">탐구 질문: 내가 먹은 음식은 나에게 어떠한 영향을 미칠까?</div>
+    <div class="name-row">
+      <label>이름 <input type="text" id="inp-name" placeholder="이름을 입력하세요" oninput="checkProgress()"/></label>
+      <label>반 &nbsp;<input type="text" id="inp-class" placeholder="반" style="width:60px;" oninput="checkProgress()"/></label>
+    </div>
+  </div>
+
+  <!-- 진행 바 -->
+  <div class="progress-bar-wrap">
+    <span class="prog-label">오늘의 퀘스트 진행도</span>
+    <div class="prog-track"><div class="prog-fill" id="prog-fill"></div></div>
+    <span class="prog-pct" id="prog-pct">0%</span>
+  </div>
+
+  <!-- 스토리 배너 -->
+  <div class="story">
+    <div class="story-icon">🎮</div>
+    <div>
+      여러분은 오늘부터 <em>견습 영양사</em>가 되었습니다!
+      균형 잡힌 식생활을 설계하는 <em>내곡 그린 급식 공모전</em>까지,
+      앞으로 주어진 퀘스트를 완수하며 능력치를 올려 봅시다.
+      첫 번째 퀘스트는 <em>나 자신을 아는 것</em>입니다. 렛츠고!
+    </div>
+  </div>
+
+  <!-- ═══ QUEST 1: 영양소 퀴즈 ═══ -->
+  <div class="quest-card" id="card-q1">
+    <div class="quest-header">
+      <span class="qbadge q1">QUEST 1</span>
+      <span class="quest-title">영양소 지식 확인! 1학년 때 배운 내용을 떠올려 보자</span>
+      <span class="quest-check" id="chk-q1">○ 미완료</span>
+    </div>
+    <div class="quest-body">
+      <div class="quiz-grid">
+        <div class="quiz-item">
+          <div class="q-num">Q1</div>
+          <div class="q-question">6대 영양소 중 에너지를 내는 것 3가지는?</div>
+          <input class="q-answer" type="text" placeholder="①" oninput="checkProgress()" data-q="q1a"/>
+          <input class="q-answer" type="text" placeholder="②" style="margin-top:5px;" oninput="checkProgress()" data-q="q1b"/>
+          <input class="q-answer" type="text" placeholder="③" style="margin-top:5px;" oninput="checkProgress()" data-q="q1c"/>
+        </div>
+        <div class="quiz-item">
+          <div class="q-num">Q2</div>
+          <div class="q-question">뼈와 치아에 중요한 영양소의 이름은?</div>
+          <input class="q-answer" type="text" placeholder="답을 입력하세요" style="margin-top:14px;" oninput="checkProgress()" data-q="q2"/>
+          <div class="hint">힌트: 우유에 많아요</div>
+        </div>
+        <div class="quiz-item">
+          <div class="q-num">Q3</div>
+          <div class="q-question">조절 영양소에 해당하는 것을 모두 고르시오</div>
+          <div class="q-choice">① 탄수화물 &nbsp; ② 무기질<br>③ 비타민 &nbsp;&nbsp; ④ 단백질</div>
+          <input class="q-answer" type="text" placeholder="번호 입력" oninput="checkProgress()" data-q="q3"/>
+        </div>
+        <div class="quiz-item">
+          <div class="q-num">Q4</div>
+          <div class="q-question">청소년기에 부족하기 쉬운 영양소 2가지는?</div>
+          <input class="q-answer" type="text" placeholder="①" style="margin-top:8px;" oninput="checkProgress()" data-q="q4a"/>
+          <input class="q-answer" type="text" placeholder="②" style="margin-top:5px;" oninput="checkProgress()" data-q="q4b"/>
+        </div>
+        <div class="quiz-item">
+          <div class="q-num">Q5</div>
+          <div class="q-question">물의 기능으로 옳은 것을 모두 고르시오</div>
+          <div class="q-choice">① 에너지 공급 ② 체온 조절<br>③ 노폐물 배출 ④ 뼈 형성</div>
+          <input class="q-answer" type="text" placeholder="번호 입력" oninput="checkProgress()" data-q="q5"/>
+        </div>
+      </div>
+      <div class="score-row">
+        정답 수: &nbsp;<input type="number" min="0" max="5" placeholder="0" id="quiz-score" oninput="checkProgress()"/> &nbsp;/ 5
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ QUEST 2: 식습관 테스트 ═══ -->
+  <div class="quest-card" id="card-q2">
+    <div class="quest-header">
+      <span class="qbadge q2">QUEST 2</span>
+      <span class="quest-title">지피지기면 백전백승! 나의 평소 식습관 테스트 결과를 기록하자</span>
+      <span class="quest-check" id="chk-q2">○ 미완료</span>
+    </div>
+    <div class="quest-body">
+      <div class="type-row">
+        <div class="type-box">
+          <div class="tlabel">온라인 식습관 테스트 결과 — 나의 식습관 유형</div>
+          <div style="display:flex;align-items:center;gap:8px;margin-top:4px;">
+            <span class="type-tag">유형</span>
+            <input type="text" class="field-input" placeholder="유형명을 입력하세요" id="habit-type" style="flex:1;" oninput="checkProgress()"/>
+          </div>
+        </div>
+        <div class="type-box">
+          <div class="tlabel">결과 한 줄 요약 (직접 써 보세요)</div>
+          <input type="text" class="field-input" placeholder="결과를 요약해 보세요" id="habit-summary" oninput="checkProgress()" style="margin-top:6px;"/>
+        </div>
+      </div>
+      <table class="habit-table">
+        <colgroup>
+          <col style="width:56px"/>
+          <col/><col/><col/><col/><col/><col/>
+        </colgroup>
+        <tr>
+          <th>식습관 항목</th>
+          <th>단백질</th><th>지방</th><th>나트륨</th>
+          <th>당류</th><th>식이섬유</th><th>탄수화물</th>
+        </tr>
+        <tr>
+          <td class="rl" style="text-align:center;">평가</td>
+          <td><select class="eval-select" oninput="checkProgress()" id="ev1"><option value="">선택</option><option>과다</option><option>적정</option><option>부족</option></select></td>
+          <td><select class="eval-select" oninput="checkProgress()" id="ev2"><option value="">선택</option><option>과다</option><option>적정</option><option>부족</option></select></td>
+          <td><select class="eval-select" oninput="checkProgress()" id="ev3"><option value="">선택</option><option>과다</option><option>적정</option><option>부족</option></select></td>
+          <td><select class="eval-select" oninput="checkProgress()" id="ev4"><option value="">선택</option><option>과다</option><option>적정</option><option>부족</option></select></td>
+          <td><select class="eval-select" oninput="checkProgress()" id="ev5"><option value="">선택</option><option>과다</option><option>적정</option><option>부족</option></select></td>
+          <td><select class="eval-select" oninput="checkProgress()" id="ev6"><option value="">선택</option><option>과다</option><option>적정</option><option>부족</option></select></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ QUEST 3: 내 식사 기록 ═══ -->
+  <div class="quest-card" id="card-q3">
+    <div class="quest-header">
+      <span class="qbadge q3">QUEST 3</span>
+      <span class="quest-title">어제 내 식사를 솔직하게 기록하자 <span style="font-size:10px;font-weight:400;color:#999;">(기억이 흐릿하면 오늘 아침으로 대체 OK)</span></span>
+      <span class="quest-check" id="chk-q3">○ 미완료</span>
+    </div>
+    <div class="quest-body">
+      <table class="meal-table">
+        <colgroup>
+          <col style="width:44px"/>
+          <col/>
+          <col style="width:130px"/>
+          <col style="width:116px"/>
+          <col style="width:116px"/>
+        </colgroup>
+        <tr>
+          <th>식사</th>
+          <th>먹은 음식</th>
+          <th>예상 주요 영양소</th>
+          <th>맛있었나요?</th>
+          <th>건강했을까요?</th>
+        </tr>
+        <tr>
+          <td class="rl2">아침</td>
+          <td><input type="text" class="meal-input" placeholder="음식명 입력" oninput="checkProgress()" id="m-a-food"/></td>
+          <td><input type="text" class="meal-input" placeholder="영양소 입력" oninput="checkProgress()"/></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'taste-a')" data-g="taste-a">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-a')" data-g="taste-a">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-a')" data-g="taste-a">😕</button></div></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'health-a')" data-g="health-a">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'health-a')" data-g="health-a">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'health-a')" data-g="health-a">🔴</button></div></td>
+        </tr>
+        <tr>
+          <td class="rl2">점심</td>
+          <td><input type="text" class="meal-input" placeholder="음식명 입력" oninput="checkProgress()" id="m-l-food"/></td>
+          <td><input type="text" class="meal-input" placeholder="영양소 입력" oninput="checkProgress()"/></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'taste-l')" data-g="taste-l">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-l')" data-g="taste-l">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-l')" data-g="taste-l">😕</button></div></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'health-l')" data-g="health-l">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'health-l')" data-g="health-l">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'health-l')" data-g="health-l">🔴</button></div></td>
+        </tr>
+        <tr>
+          <td class="rl2">저녁</td>
+          <td><input type="text" class="meal-input" placeholder="음식명 입력" oninput="checkProgress()" id="m-d-food"/></td>
+          <td><input type="text" class="meal-input" placeholder="영양소 입력" oninput="checkProgress()"/></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'taste-d')" data-g="taste-d">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-d')" data-g="taste-d">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-d')" data-g="taste-d">😕</button></div></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'health-d')" data-g="health-d">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'health-d')" data-g="health-d">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'health-d')" data-g="health-d">🔴</button></div></td>
+        </tr>
+        <tr>
+          <td class="rl2">간식</td>
+          <td><input type="text" class="meal-input" placeholder="음식명 입력" oninput="checkProgress()"/></td>
+          <td><input type="text" class="meal-input" placeholder="영양소 입력" oninput="checkProgress()"/></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'taste-s')" data-g="taste-s">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-s')" data-g="taste-s">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'taste-s')" data-g="taste-s">😕</button></div></td>
+          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'health-s')" data-g="health-s">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'health-s')" data-g="health-s">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'health-s')" data-g="health-s">🔴</button></div></td>
+        </tr>
+      </table>
+      <div class="reflect-grid" style="margin-top:12px;">
+        <div class="rbox">
+          <div class="rlabel"><span class="rbar"></span>지금처럼 유지해야 할 점</div>
+          <textarea class="field-input" placeholder="좋은 식습관을 적어보세요" oninput="checkProgress()" id="reflect-keep"></textarea>
+        </div>
+        <div class="rbox">
+          <div class="rlabel orange"><span class="rbar orange"></span>앞으로 바꾸고 싶은 점</div>
+          <textarea class="field-input" placeholder="개선하고 싶은 점을 적어보세요" oninput="checkProgress()" id="reflect-change"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ QUEST 4: EXIT TICKET ═══ -->
+  <div class="quest-card" id="card-q4">
+    <div class="quest-header">
+      <span class="qbadge q4">QUEST 4</span>
+      <span class="quest-title">오늘의 탐구를 마무리하자 — EXIT TICKET</span>
+      <span class="quest-check" id="chk-q4">○ 미완료</span>
+    </div>
+    <div class="quest-body">
+      <div class="exit-grid">
+        <div class="exit-item">
+          <div class="e-num">① 오늘 새로 알게 된 것</div>
+          <div class="e-q">내 식사에서 가장 놀라웠던 발견은?</div>
+          <textarea class="field-input" placeholder="자유롭게 써 보세요" id="exit1" oninput="checkProgress()"></textarea>
+        </div>
+        <div class="exit-item">
+          <div class="e-num">② 나의 탐구 질문</div>
+          <div class="e-q">더 알고 싶은 것이 생겼다면 적어 보세요!</div>
+          <textarea class="field-input" placeholder="궁금한 점을 써 보세요" id="exit2" oninput="checkProgress()"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 잠금해제 + 능력치 ═══ -->
+  <div class="unlock-section">
+    <div class="unlock-title">⚔ 영양사 능력치 달성 현황</div>
+    <div class="unlock-desc" id="unlock-desc">퀘스트를 모두 완료하면 <strong style="color:var(--yellow);">나의 식습관</strong> 능력치를 해제할 수 있어요!</div>
+
+    <button class="unlock-btn" id="unlock-btn" onclick="doUnlock()" disabled>
+      🔒 능력치 잠금 해제
+    </button>
+    <div class="unlock-hint" id="unlock-hint">퀘스트 1~4를 모두 작성해야 활성화됩니다</div>
+
+    <div class="stat-grid">
+      <div class="stat-row">
+        <div class="stat-name" style="color:var(--yellow);">나의 식습관</div>
+        <div class="bar-bg">
+          <div class="bar-fill off" id="bar-habit"></div>
+        </div>
+        <div class="stat-val" id="val-habit" style="color:#555;">-</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-name">영양섭취기준</div>
+        <div class="bar-bg"><div class="bar-fill off"></div><div class="lock-stripe"></div></div>
+        <div class="stat-lock">🔒 2차시</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-name">식품군 분류</div>
+        <div class="bar-bg"><div class="bar-fill off"></div><div class="lock-stripe"></div></div>
+        <div class="stat-lock">🔒 2차시</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-name">1인 1회 분량</div>
+        <div class="bar-bg"><div class="bar-fill off"></div><div class="lock-stripe"></div></div>
+        <div class="stat-lock">🔒 3차시</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-name">권장식사패턴</div>
+        <div class="bar-bg"><div class="bar-fill off"></div><div class="lock-stripe"></div></div>
+        <div class="stat-lock">🔒 4차시</div>
+      </div>
+      <div class="stat-row">
+        <div class="stat-name">식단 작성법</div>
+        <div class="bar-bg"><div class="bar-fill off"></div><div class="lock-stripe"></div></div>
+        <div class="stat-lock">🔒 5차시</div>
+      </div>
+    </div>
+
+    <div class="radar-row">
+      <svg viewBox="0 0 110 110" width="104" height="104" style="flex-shrink:0;" id="radar-svg">
+        <polygon points="55,10 95,32 95,78 55,100 15,78 15,32" fill="none" stroke="#444" stroke-width="0.8"/>
+        <polygon points="55,24 83,38 83,72 55,86 27,72 27,38" fill="none" stroke="#3a3a3a" stroke-width="0.6"/>
+        <polygon points="55,38 71,44 71,66 55,72 39,66 39,44" fill="none" stroke="#333" stroke-width="0.4"/>
+        <line x1="55" y1="10" x2="55" y2="100" stroke="#3a3a3a" stroke-width="0.5"/>
+        <line x1="15" y1="32" x2="95" y2="78" stroke="#3a3a3a" stroke-width="0.5"/>
+        <line x1="95" y1="32" x2="15" y2="78" stroke="#3a3a3a" stroke-width="0.5"/>
+        <polygon id="radar-fill" points="55,55 55,55 55,55 55,55 55,55 55,55" fill="#f9c74f" fill-opacity="0" stroke="#f9c74f" stroke-width="1.5" style="transition:all 1s ease;"/>
+        <text x="55" y="7" text-anchor="middle" font-size="6" fill="#ccc" font-family="sans-serif">나의 식습관</text>
+        <text x="99" y="31" text-anchor="start" font-size="5.5" fill="#777" font-family="sans-serif">영양섭취</text>
+        <text x="99" y="80" text-anchor="start" font-size="5.5" fill="#777" font-family="sans-serif">식품군</text>
+        <text x="55" y="108" text-anchor="middle" font-size="5.5" fill="#777" font-family="sans-serif">식단 작성</text>
+        <text x="11" y="80" text-anchor="end" font-size="5.5" fill="#777" font-family="sans-serif">권장패턴</text>
+        <text x="11" y="31" text-anchor="end" font-size="5.5" fill="#777" font-family="sans-serif">1회 분량</text>
+      </svg>
+      <div class="radar-legend">
+        <div class="leg-item"><div class="leg-dot off" id="leg-habit"></div>나의 식습관</div>
+        <div class="leg-item"><div class="leg-dot off"></div>영양섭취기준 — 2차시</div>
+        <div class="leg-item"><div class="leg-dot off"></div>식품군 분류 — 2차시</div>
+        <div class="leg-item"><div class="leg-dot off"></div>1인 1회 분량 — 3차시</div>
+        <div class="leg-item"><div class="leg-dot off"></div>권장식사패턴 — 4차시</div>
+        <div class="leg-item"><div class="leg-dot off"></div>식단 작성법 — 5차시</div>
+        <div class="max-msg">★ 8차시 공모전 완료 → 전 능력치 MAX 달성!</div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /container -->
+
+<!-- 잠금해제 오버레이 -->
+<div class="unlock-overlay" id="overlay">
+  <div class="unlock-modal">
+    <div class="modal-icon">🏆</div>
+    <div class="modal-title">능력치 해제!</div>
+    <div class="modal-desc">
+      퀘스트를 모두 완료했습니다!<br>
+      <strong style="color:var(--yellow);">나의 식습관</strong> 능력치가 해제되었어요.
+    </div>
+    <div class="modal-stat">
+      <div class="modal-stat-row">
+        <div class="modal-stat-name">나의 식습관</div>
+        <div class="modal-bar-bg"><div class="modal-bar-fill" id="modal-bar"></div></div>
+        <div style="font-size:9px;color:var(--yellow);font-weight:700;margin-left:6px;">Lv.1</div>
+      </div>
+    </div>
+    <button class="modal-close" onclick="closeOverlay()">확인 ✓</button>
+  </div>
+</div>
+
+<script>
+// 이모지 선택
+function selectEmoji(btn, group) {
+  document.querySelectorAll(`.emoji-btn[data-g="${group}"]`).forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  checkProgress();
+}
+
+// 진행도 체크
+function checkProgress() {
+  const q1 = checkQ1();
+  const q2 = checkQ2();
+  const q3 = checkQ3();
+  const q4 = checkQ4();
+
+  updateQuestCheck('chk-q1', 'card-q1', q1);
+  updateQuestCheck('chk-q2', 'card-q2', q2);
+  updateQuestCheck('chk-q3', 'card-q3', q3);
+  updateQuestCheck('chk-q4', 'card-q4', q4);
+
+  const total = [q1,q2,q3,q4].filter(Boolean).length;
+  const pct = Math.round(total / 4 * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-pct').textContent = pct + '%';
+
+  const btn = document.getElementById('unlock-btn');
+  const hint = document.getElementById('unlock-hint');
+  const allDone = q1 && q2 && q3 && q4;
+
+  if (allDone) {
+    btn.classList.add('ready');
+    btn.disabled = false;
+    btn.textContent = '✨ 나의 식습관 능력치 해제!';
+    hint.textContent = '모든 퀘스트 완료! 버튼을 눌러 능력치를 해제하세요 🎉';
+    hint.classList.add('ready');
+  } else {
+    btn.classList.remove('ready');
+    btn.disabled = true;
+    btn.textContent = '🔒 능력치 잠금 해제';
+    const remaining = 4 - total;
+    hint.textContent = `퀘스트 ${remaining}개를 더 완료하면 활성화됩니다`;
+    hint.classList.remove('ready');
+  }
+}
+
+function checkQ1() {
+  const fields = ['q1a','q1b','q1c','q2','q3','q4a','q4b','q5'];
+  return fields.every(id => {
+    const el = document.querySelector(`[data-q="${id}"]`);
+    return el && el.value.trim() !== '';
+  });
+}
+
+function checkQ2() {
+  const type = document.getElementById('habit-type').value.trim();
+  const summary = document.getElementById('habit-summary').value.trim();
+  const evals = ['ev1','ev2','ev3','ev4','ev5','ev6'];
+  const evDone = evals.every(id => document.getElementById(id).value !== '');
+  return type && summary && evDone;
+}
+
+function checkQ3() {
+  const foods = ['m-a-food','m-l-food','m-d-food'];
+  const foodDone = foods.every(id => document.getElementById(id).value.trim() !== '');
+  const keep = document.getElementById('reflect-keep').value.trim();
+  const change = document.getElementById('reflect-change').value.trim();
+  return foodDone && keep && change;
+}
+
+function checkQ4() {
+  const e1 = document.getElementById('exit1').value.trim();
+  const e2 = document.getElementById('exit2').value.trim();
+  return e1 && e2;
+}
+
+function updateQuestCheck(checkId, cardId, done) {
+  const el = document.getElementById(checkId);
+  const card = document.getElementById(cardId);
+  if (done) {
+    el.textContent = '✓ 완료!';
+    el.classList.add('done');
+    card.classList.add('done');
+  } else {
+    el.textContent = '○ 미완료';
+    el.classList.remove('done');
+    card.classList.remove('done');
+  }
+}
+
+// 잠금해제 실행
+function doUnlock() {
+  document.getElementById('overlay').classList.add('show');
+  // 바 애니메이션
+  setTimeout(() => {
+    document.getElementById('modal-bar').style.width = '20%';
+  }, 300);
+}
+
+function closeOverlay() {
+  document.getElementById('overlay').classList.remove('show');
+  // 능력치 반영
+  document.getElementById('bar-habit').classList.remove('off');
+  document.getElementById('bar-habit').classList.add('on');
+  document.getElementById('val-habit').textContent = 'Lv.1';
+  document.getElementById('val-habit').style.color = 'var(--yellow)';
+  document.getElementById('leg-habit').classList.remove('off');
+  document.getElementById('leg-habit').classList.add('on');
+  // 레이더 채우기
+  document.getElementById('radar-fill').setAttribute('points','55,48 58,54 55,56 52,54 52,51 52,49');
+  document.getElementById('radar-fill').setAttribute('fill-opacity','0.35');
+  // 버튼 비활성화
+  const btn = document.getElementById('unlock-btn');
+  btn.textContent = '✅ 나의 식습관 능력치 달성!';
+  btn.classList.remove('ready');
+  btn.disabled = true;
+  btn.style.background = '#2a4a2a';
+  btn.style.color = '#7ab856';
+  btn.style.borderColor = '#3a6a3a';
+  btn.style.cursor = 'default';
+  btn.style.animation = 'none';
+  document.getElementById('unlock-desc').innerHTML = '🎉 <strong style="color:#7ab856;">나의 식습관</strong> 능력치가 해제되었습니다! 다음 차시에서 더 많은 능력치를 획득하세요.';
+  document.getElementById('unlock-hint').textContent = '';
+}
+</script>
+</body>
+</html>
