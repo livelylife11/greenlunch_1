@@ -86,7 +86,8 @@ textarea.field-input:focus{border-color:var(--gold);}
 .cipher-q{background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;}
 .cipher-q .cq-label{font-size:10px;font-weight:700;color:var(--teal);margin-bottom:4px;}
 .cipher-q .cq-text{font-size:11px;color:#555;margin-bottom:6px;line-height:1.5;}
-.cipher-q .cq-hint{font-size:9px;color:#bbb;margin-top:4px;}
+.cipher-q .cq-hint{font-size:9px;color:#bbb;margin-top:4px;line-height:1.8;}
+.cipher-blank{border:none;border-bottom:1.5px solid var(--teal);background:transparent;font-size:11px;font-family:inherit;outline:none;width:48px;text-align:center;color:var(--teal);font-weight:700;padding:0 2px;}
 .cipher-input{border:none;border-bottom:1.5px solid var(--teal);background:transparent;font-family:inherit;font-size:14px;font-weight:700;outline:none;width:80px;padding:3px 4px;text-align:center;letter-spacing:2px;}
 .cipher-input.correct{border-bottom-color:var(--green);color:var(--green);}
 .cipher-input.wrong{border-bottom-color:var(--red);color:var(--red);}
@@ -182,6 +183,36 @@ textarea.field-input:focus{border-color:var(--gold);}
   .test-grid,.reflect-grid,.exit-grid{grid-template-columns:1fr;}
   .stat-grid{grid-template-columns:1fr;}
   .radar-row{flex-direction:column;}
+}
+
+/* PDF 저장 버튼 */
+.pdf-btn-wrap{
+  text-align:center;
+  padding:14px 0 6px;
+}
+.pdf-btn{
+  background:var(--main);color:#fdfaf3;
+  border:none;border-radius:30px;
+  font-family:'Noto Sans KR',sans-serif;
+  font-size:13px;font-weight:700;
+  padding:12px 32px;cursor:pointer;
+  display:inline-flex;align-items:center;gap:8px;
+  transition:background 0.2s;
+}
+.pdf-btn:hover{background:#333;}
+@media print{
+  .pdf-btn-wrap{display:none;}
+  body{background:white;}
+  .container{max-width:100%;}
+}
+
+@media print {
+  .pdf-btn-wrap { display: none !important; }
+  .story, .stat-section { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .quest-card { break-inside: avoid; }
+  .overlay { display: none !important; }
+  body { background: white !important; }
+  .container { max-width: 100% !important; }
 }
 </style>
 </head>
@@ -291,60 +322,8 @@ textarea.field-input:focus{border-color:var(--gold);}
   <div class="quest-card" id="card-q3">
     <div class="quest-header">
       <span class="qbadge q3">QUEST 3</span>
-      <span class="quest-title">어제 내 식사를 솔직하게 기록하자 <span style="font-size:10px;font-weight:400;color:#999;">(기억이 흐릿하면 오늘 아침으로 대체 OK)</span></span>
-      <span class="quest-check" id="chk-q3">○ 미완료</span>
-    </div>
-    <div class="quest-body">
-      <table class="meal-table">
-        <colgroup><col style="width:44px"/><col/><col style="width:120px"/><col style="width:110px"/><col style="width:110px"/></colgroup>
-        <tr><th>식사</th><th>먹은 음식</th><th>예상 주요 영양소</th><th>맛있었나요?</th><th>건강했을까요?</th></tr>
-        <tr>
-          <td class="rl">아침</td>
-          <td><input type="text" placeholder="음식명 입력" oninput="checkProgress()" id="m-a"/></td>
-          <td><input type="text" placeholder="영양소 입력" oninput="checkProgress()"/></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'ta')" data-g="ta">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'ta')" data-g="ta">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'ta')" data-g="ta">😕</button></div></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'ha')" data-g="ha">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'ha')" data-g="ha">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'ha')" data-g="ha">🔴</button></div></td>
-        </tr>
-        <tr>
-          <td class="rl">점심</td>
-          <td><input type="text" placeholder="음식명 입력" oninput="checkProgress()" id="m-l"/></td>
-          <td><input type="text" placeholder="영양소 입력" oninput="checkProgress()"/></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'tl')" data-g="tl">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'tl')" data-g="tl">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'tl')" data-g="tl">😕</button></div></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'hl')" data-g="hl">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'hl')" data-g="hl">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'hl')" data-g="hl">🔴</button></div></td>
-        </tr>
-        <tr>
-          <td class="rl">저녁</td>
-          <td><input type="text" placeholder="음식명 입력" oninput="checkProgress()" id="m-d"/></td>
-          <td><input type="text" placeholder="영양소 입력" oninput="checkProgress()"/></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'td')" data-g="td">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'td')" data-g="td">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'td')" data-g="td">😕</button></div></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'hd')" data-g="hd">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'hd')" data-g="hd">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'hd')" data-g="hd">🔴</button></div></td>
-        </tr>
-        <tr>
-          <td class="rl">간식</td>
-          <td><input type="text" placeholder="음식명 입력" oninput="checkProgress()"/></td>
-          <td><input type="text" placeholder="영양소 입력" oninput="checkProgress()"/></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'ts')" data-g="ts">😋</button><button class="emoji-btn" onclick="selectEmoji(this,'ts')" data-g="ts">😐</button><button class="emoji-btn" onclick="selectEmoji(this,'ts')" data-g="ts">😕</button></div></td>
-          <td><div class="emoji-group"><button class="emoji-btn" onclick="selectEmoji(this,'hs')" data-g="hs">🟢</button><button class="emoji-btn" onclick="selectEmoji(this,'hs')" data-g="hs">🟡</button><button class="emoji-btn" onclick="selectEmoji(this,'hs')" data-g="hs">🔴</button></div></td>
-        </tr>
-      </table>
-      <div class="reflect-grid">
-        <div class="rbox">
-          <div class="rlabel"><span class="rbar"></span>지금처럼 유지해야 할 점</div>
-          <textarea class="field-input" placeholder="좋은 식습관을 적어보세요" oninput="checkProgress()" id="keep"></textarea>
-        </div>
-        <div class="rbox">
-          <div class="rlabel orange"><span class="rbar orange"></span>앞으로 바꾸고 싶은 점</div>
-          <textarea class="field-input" placeholder="개선하고 싶은 점을 적어보세요" oninput="checkProgress()" id="change"></textarea>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="quest-card" id="card-q4">
-    <div class="quest-header">
-      <span class="qbadge q4">QUEST 4</span>
       <span class="quest-title">영양섭취기준표의 숫자로 암호를 해독하라!</span>
-      <span class="quest-check" id="chk-q4">○ 미완료</span>
+      <span class="quest-check" id="chk-q3">○ 미완료</span>
     </div>
     <div class="quest-body">
       <div class="cipher-intro">
@@ -364,7 +343,7 @@ textarea.field-input:focus{border-color:var(--gold);}
           <div class="cq-text">12~14세 남자의 칼슘 권장량은 얼마인가요?<br>
           <span style="font-size:10px;color:var(--teal);">→ 이 숫자의 <strong>천의 자리 숫자</strong>가 암호 첫 번째 자리예요.</span></div>
           <input class="cipher-input" type="text" id="c1" maxlength="4" placeholder="mg" oninput="updateCipher()"/>
-          <div class="cq-hint">💡 성인보다 더 많이 필요한 이유는? 성장기에 뼈가 만들어지기 때문!</div>
+          <div class="cq-hint">💡 성인보다 더 많이 필요한 이유는? 성장기에 <input class="cipher-blank" id="blank1" placeholder="???" oninput="checkProgress()">가 만들어지기 때문!</div>
         </div>
 
         <div class="cipher-q">
@@ -372,7 +351,7 @@ textarea.field-input:focus{border-color:var(--gold);}
           <div class="cq-text">나트륨 충분 섭취량은 얼마인가요?<br>
           <span style="font-size:10px;color:var(--teal);">→ 이 숫자의 <strong>천의 자리 숫자</strong>가 암호 두 번째 자리예요.</span></div>
           <input class="cipher-input" type="text" id="c2" maxlength="5" placeholder="mg" oninput="updateCipher()"/>
-          <div class="cq-hint">💡 이 양보다 많이 먹으면? 고혈압·심장 질환 위험이 높아져요!</div>
+          <div class="cq-hint">💡 이 양보다 많이 먹으면? 고혈압·심장 질환 <input class="cipher-blank" id="blank2" placeholder="???" oninput="checkProgress()">이 높아져요!</div>
         </div>
 
         <div class="cipher-q">
@@ -380,15 +359,15 @@ textarea.field-input:focus{border-color:var(--gold);}
           <div class="cq-text">12~14세 여자의 철 권장량은 얼마인가요?<br>
           <span style="font-size:10px;color:var(--teal);">→ 이 숫자 자체가 암호 세 번째·네 번째 자리예요.</span></div>
           <input class="cipher-input" type="text" id="c3" maxlength="2" placeholder="mg" oninput="updateCipher()"/>
-          <div class="cq-hint">💡 남자보다 여자에게 더 많이 필요한 이유는? 생리로 인한 혈액 손실 때문!</div>
+          <div class="cq-hint">💡 남자보다 여자에게 더 많이 필요한 이유는? 생리로 인한 <input class="cipher-blank" id="blank3" placeholder="???" oninput="checkProgress()"> 손실 때문!</div>
         </div>
 
         <div class="cipher-q">
           <div class="cq-label">🔑 암호 4</div>
-          <div class="cq-text">12~14세 남자의 1일 에너지 권장량은 얼마인가요?<br>
-          <span style="font-size:10px;color:var(--teal);">→ 이 숫자의 <strong>천의 자리 숫자</strong>가 암호 다섯 번째 자리예요.</span></div>
+          <div class="cq-text">15~18세 남자의 1일 에너지 권장량은 얼마인가요?<br>
+          <span style="font-size:10px;color:var(--teal);">→ 이 숫자의 <strong>백의 자리 숫자</strong>가 암호 다섯 번째 자리예요.</span></div>
           <input class="cipher-input" type="text" id="c4" maxlength="5" placeholder="kcal" oninput="updateCipher()"/>
-          <div class="cq-hint">💡 성인 남자(2,600kcal)보다 적은 이유는? 아직 성장 중이라 근육량이 적기 때문!</div>
+          <div class="cq-hint">💡 12~14세 남자(2,500kcal)보다 더 많은 이유는? <input class="cipher-blank" id="blank4" placeholder="???" oninput="checkProgress()">이 가장 활발한 시기이기 때문!</div>
         </div>
 
       </div>
@@ -423,6 +402,39 @@ textarea.field-input:focus{border-color:var(--gold);}
         </div>
       </div>
     </div>
+
+  
+  <div class="quest-card" id="card-q4">
+    <div class="quest-header">
+      <span class="qbadge q4">QUEST 4</span>
+      <span class="quest-title">나의 에너지 권장 섭취량을 직접 계산해보자!</span>
+      <span class="quest-check" id="chk-q4">○ 미완료</span>
+    </div>
+    <div class="quest-body" style="text-align:center;padding:16px 18px;">
+      <div style="font-size:28px;margin-bottom:8px;">⚡</div>
+      <div style="font-size:12px;color:#555;line-height:1.7;margin-bottom:14px;">
+        나이·성별·활동량에 따라 필요한 에너지량이 달라요.<br>
+        <span style="font-size:11px;color:#aaa;">아래 버튼을 눌러 나만의 에너지 권장 섭취량을 계산해 보세요!</span>
+      </div>
+      <a href="https://www.jiwonnote.com/bmr-tdee-calculator/" target="_blank"
+        style="display:inline-block;background:linear-gradient(135deg,var(--blue),#1a3f60);color:#fff;
+               text-decoration:none;border-radius:30px;font-family:'Black Han Sans',sans-serif;
+               font-size:14px;padding:11px 30px;box-shadow:0 4px 14px rgba(46,95,128,0.35);">
+        ⚡ 나의 에너지 권장 섭취량 계산하기 →
+      </a>
+      <div id="energy-status-msg" style="margin-top:10px;font-size:11px;color:#888;">
+        계산 후 결과를 아래에 기록해 보세요!
+      </div>
+      <div style="margin-top:14px;background:#fff;border:1.5px solid var(--border);border-radius:10px;padding:12px 14px;text-align:left;">
+        <div style="font-size:10px;color:#888;margin-bottom:4px;">나의 기초대사량(BMR)</div>
+        <input type="text" class="field-input" id="my-bmr" placeholder="예) 1,580 kcal" oninput="checkProgress()" style="border-bottom-color:var(--blue);margin-bottom:10px;"/>
+        <div style="font-size:10px;color:#888;margin-bottom:4px;">나의 1일 에너지 권장량(TDEE)</div>
+        <input type="text" class="field-input" id="my-tdee" placeholder="예) 2,320 kcal" oninput="checkProgress()" style="border-bottom-color:var(--blue);margin-bottom:10px;"/>
+        <div style="font-size:10px;color:#888;margin-bottom:4px;">표의 권장량과 비교해서 느낀 점</div>
+        <textarea class="field-input" id="my-energy-reflect" placeholder="예) 내 활동량이 생각보다 높아서 권장량보다 많이 필요하다는 걸 알았어요." oninput="checkProgress()" style="min-height:48px;border-color:var(--blue);"></textarea>
+      </div>
+    </div>
+  </div>
   </div>
 
   <!-- ═══ QUEST 5: EXIT TICKET ═══ -->
@@ -519,6 +531,15 @@ textarea.field-input:focus{border-color:var(--gold);}
     </div>
   </div>
 
+
+  <!-- PDF 저장 버튼 -->
+  <div class="pdf-btn-wrap">
+    <button class="pdf-btn" onclick="savePDF()">
+      🖨️ 활동지 PDF로 저장하기
+    </button>
+    <p style="font-size:11px;color:#aaa;margin-top:8px;">버튼을 누르면 인쇄 화면이 열려요. '대상'을 <strong>PDF로 저장</strong>으로 선택하세요.</p>
+  </div>
+
 </div>
 
 <!-- 모달 -->
@@ -539,14 +560,19 @@ textarea.field-input:focus{border-color:var(--gold);}
 </div>
 
 <script>
+
+function savePDF() {
+  window.print();
+}
+
 /* ── 암호 해독 ── */
-// 정답: c1=1000→천의자리=1, c2=2300→천의자리=2, c3=14→그대로=14, c4=2500→천의자리=2
-// 암호 배열: [1, 2, 1, 4, 2] → 키워드: "균형"을 표현하는 숫자 코드
-// 실제 키워드: 암호 조합 12142 = "균형" (수업 중 교사가 연결하는 방식)
+// 정답: c1=1000→천의자리=1, c2=1500→천의자리=1, c3=16→그대로=16, c4=2700→백의자리=7
+// 암호 배열: [1, 1, 1, 6, 7] → 키워드: "균형"을 표현하는 숫자 코드
+// 실제 키워드: 암호 조합 11167 = "균형" (수업 중 교사가 연결하는 방식)
 const CIPHER_ANSWERS = {
   c1: { answer: '1000', digit: v => v[0] },   // 1000의 천의자리 → '1'
   c2: { answer: '2300', digit: v => v[0] },   // 2300의 천의자리 → '2'
-  c3: { answer: '14',   digit: v => v },       // 14 그대로 → '1','4'
+  c3: { answer: '16',   digit: v => v },       // 16 그대로 → '1','6'
   c4: { answer: '2500', digit: v => v[0] },   // 2500의 천의자리 → '2'
 };
 const CIPHER_KEYWORD = '균  형'; // 최종 키워드
@@ -563,7 +589,7 @@ function updateCipher(){
   const d2 = v2.length > 0 ? v2[0] : '?';
   const d3 = v3.length > 0 ? v3[0] : '?';
   const d4 = v3.length > 1 ? v3[1] : '?';
-  const d5 = v4.length > 0 ? v4[0] : '?';
+  const d5 = v4.length > 1 ? v4[1] : '?';
 
   const boxes = [d1,d2,d3,d4,d5];
   boxes.forEach((d,i) => {
@@ -583,8 +609,8 @@ function checkCipher(){
 
   const ok1 = v1 === '1000';
   const ok2 = v2 === '1500';
-  const ok3 = v3 === '14';
-  const ok4 = v4 === '2500';
+  const ok3 = v3 === '16';
+  const ok4 = v4 === '2700';
   const allOk = ok1 && ok2 && ok3 && ok4;
 
   document.getElementById('c1').classList.toggle('correct', ok1);
@@ -624,17 +650,18 @@ function selectEmoji(btn, group){
 /* ── 진행도 ── */
 function checkProgress(){
   const q1 = checkQ1();
-  const q2 = checkQ4();
-  const q3 = checkQ2();
-  const q4 = checkQ3();
+  const q2 = checkQ2();
+  const q3 = checkQ4(); // 암호해독 (card-q3)
+  const q4 = checkQ3_energy(); // 에너지계산기 (card-q4)
   const q5 = checkQ5();
   const name = document.getElementById('inp-name').value.trim();
 
-  [['chk-q1','card-q1',q1],['chk-q4','card-q4',q2],
-   ['chk-q2','card-q2',q3],['chk-q3','card-q3',q4],
+  [['chk-q1','card-q1',q1],['chk-q2','card-q2',q2],
+   ['chk-q3','card-q3',q3],['chk-q4','card-q4',q4],
    ['chk-q5','card-q5',q5]].forEach(([cid,kid,done]) => {
     const el = document.getElementById(cid);
     const card = document.getElementById(kid);
+    if(!el||!card) return;
     el.textContent = done ? '✓ 완료!' : '○ 미완료';
     el.classList.toggle('done', done);
     card.classList.toggle('done', done);
@@ -699,7 +726,11 @@ function checkQ4(){
   const c4 = cleanNum(document.getElementById('c4').value.trim());
   const r1 = document.getElementById('reflect1').value.trim();
   const r2 = document.getElementById('reflect2').value.trim();
-  return c1!==''&&c2!==''&&c3!==''&&c4!==''&&r1!==''&&r2!=='';
+  const b1 = document.getElementById('blank1') ? document.getElementById('blank1').value.trim() : 'x';
+  const b2 = document.getElementById('blank2') ? document.getElementById('blank2').value.trim() : 'x';
+  const b3 = document.getElementById('blank3') ? document.getElementById('blank3').value.trim() : 'x';
+  const b4 = document.getElementById('blank4') ? document.getElementById('blank4').value.trim() : 'x';
+  return c1!==''&&c2!==''&&c3!==''&&c4!==''&&r1!==''&&r2!==''&&b1!==''&&b2!==''&&b3!==''&&b4!=='';
 }
 function checkQ2(){
   const type = document.getElementById('habit-type').value.trim();
@@ -708,10 +739,13 @@ function checkQ2(){
   return type && summary && evals.every(id => document.getElementById(id).value !== '');
 }
 function checkQ3(){
-  const meals = ['m-a','m-l','m-d'];
-  const keep = document.getElementById('keep').value.trim();
-  const change = document.getElementById('change').value.trim();
-  return meals.every(id => document.getElementById(id).value.trim() !== '') && keep && change;
+  return checkQ4(); // 암호해독이 q3으로 이동 — 같은 로직
+}
+function checkQ3_energy(){
+  const bmr = document.getElementById('my-bmr') ? document.getElementById('my-bmr').value.trim() : '';
+  const tdee = document.getElementById('my-tdee') ? document.getElementById('my-tdee').value.trim() : '';
+  const ref = document.getElementById('my-energy-reflect') ? document.getElementById('my-energy-reflect').value.trim() : '';
+  return bmr !== '' && tdee !== '' && ref !== '';
 }
 function checkQ5(){
   return document.getElementById('exit1').value.trim() !== '' &&
